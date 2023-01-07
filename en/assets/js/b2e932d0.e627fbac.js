@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkhertzbeat=self.webpackChunkhertzbeat||[]).push([[6017],{60428:e=>{e.exports=JSON.parse('{"permalink":"/en/blog/tags/opensource/page/18","page":18,"postsPerPage":1,"totalPages":18,"totalCount":18,"previousPage":"/en/blog/tags/opensource/page/17","blogDescription":"Blog","blogTitle":"Blog"}')}}]);

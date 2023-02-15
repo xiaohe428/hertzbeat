@@ -86,7 +86,7 @@ public class SshCollectImpl extends AbstractCollect {
             ByteArrayOutputStream response = new ByteArrayOutputStream();
             channel.setOut(response);
             if (!channel.open().verify(timeout).isOpened()) {
-                throw new Exception("open failed");
+                throw new Exception("Open Failed");
             }
             List<ClientChannelEvent> list = new ArrayList<>();
             list.add(ClientChannelEvent.CLOSED);
@@ -96,7 +96,7 @@ public class SshCollectImpl extends AbstractCollect {
             String result = response.toString();
             if (!StringUtils.hasText(result)) {
                 builder.setCode(CollectRep.Code.FAIL);
-                builder.setMsg("采集数据失败");
+                builder.setMsg("Collect Data Failed");
             }
             switch (sshProtocol.getParseType()) {
                 case PARSE_TYPE_NETCAT:
@@ -243,13 +243,11 @@ public class SshCollectImpl extends AbstractCollect {
                 .verify(timeout, TimeUnit.MILLISECONDS).getSession();
         if (StringUtils.hasText(sshProtocol.getPassword())) {
             clientSession.addPasswordIdentity(sshProtocol.getPassword());
-        } else if (StringUtils.hasText(sshProtocol.getPublicKey())) {
-            KeyPair keyPair = KeyPairUtil.getKeyPairFromPublicKey(sshProtocol.getPublicKey());
+        } else if (StringUtils.hasText(sshProtocol.getPublicKey()) && StringUtils.hasText(sshProtocol.getPrivateKey())) {
+            KeyPair keyPair = KeyPairUtil.getKeyPairFromKeyStr(sshProtocol.getPrivateKey(), sshProtocol.getPublicKey());
             if (keyPair != null) {
                 clientSession.addPublicKeyIdentity(keyPair);
             }
-        } else {
-            throw new IllegalArgumentException("需填写账户登陆密码或公钥");
         }
         // 进行认证
         if (!clientSession.auth().verify(timeout, TimeUnit.MILLISECONDS).isSuccess()) {

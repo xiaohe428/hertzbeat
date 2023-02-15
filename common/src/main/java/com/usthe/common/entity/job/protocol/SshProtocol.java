@@ -59,6 +59,11 @@ public class SshProtocol {
     private String password;
 
     /**
+     * privateKey optional
+     */
+    private String privateKey;
+
+    /**
      * 公钥(可选)
      */
     private String publicKey;

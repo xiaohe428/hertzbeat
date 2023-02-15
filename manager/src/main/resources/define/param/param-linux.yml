@@ -49,3 +49,17 @@ param:
       en-US: Password
     type: password
     required: false
+  - field: privateKey
+    name:
+      zh-CN: 私钥
+      en-US: PrivateKey
+    type: text
+    required: false
+    hide: true
+  - field: publicKey
+    name:
+      zh-CN: 公钥
+      en-US: PublicKey
+    type: text
+    required: false
+    hide: true

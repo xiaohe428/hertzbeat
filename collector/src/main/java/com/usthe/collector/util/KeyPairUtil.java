@@ -17,11 +17,14 @@
 
 package com.usthe.collector.util;
 
+import com.usthe.common.util.Base64Util;
 import lombok.extern.slf4j.Slf4j;
 
 import java.security.KeyFactory;
 import java.security.KeyPair;
+import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
@@ -51,11 +54,41 @@ public class KeyPairUtil {
             if (publicKeyStr == null || "".equals(publicKeyStr)) {
                 return null;
             }
-            // todo fix 公钥解析
+            // todo fix 公钥解析 支持 512位 PKCS8
             byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyStr);
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKeyBytes);
             PublicKey publicKey = keyFactory.generatePublic(keySpec);
             return new KeyPair(publicKey, null);
+        } catch (Exception e) {
+            log.info("[keyPair] parse failed, {}." + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * get keyPair
+     * @param privateKeyStr privateKey
+     * @param publicKeyStr publicKey
+     * @return keyPair
+     */
+    public static KeyPair getKeyPairFromKeyStr(String privateKeyStr, String publicKeyStr) {
+        try {
+            if (privateKeyStr == null || publicKeyStr == null || "".equals(privateKeyStr) || "".equals(publicKeyStr)) {
+                return null;
+            }
+            privateKeyStr = privateKeyStr.replace("\n", "");
+            privateKeyStr = privateKeyStr.replace("\t", "");
+            privateKeyStr = privateKeyStr.replace(" ", "");
+            publicKeyStr = publicKeyStr.replace("\n", "");
+            publicKeyStr = publicKeyStr.replace("\t", "");
+            publicKeyStr = publicKeyStr.replace(" ", "");
+            byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyStr);
+            byte[] privateKeyBytes = Base64.getDecoder().decode(privateKeyStr);
+            X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
+            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+            PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+            PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
+            return new KeyPair(publicKey, privateKey);
         } catch (Exception e) {
             log.info("[keyPair] parse failed, {}." + e.getMessage());
             return null;

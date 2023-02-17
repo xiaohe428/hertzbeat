@@ -3,8 +3,8 @@ category: mid
 # 监控应用类型名称(与文件名保持一致)
 app: flink
 name:
-  zh-CN: Flink
-  en-US: Flink
+  zh-CN: Flink流引擎
+  en-US: Flink Stream
 # 参数映射map. type是参数类型: 0-number数字, 1-string明文字符串, 2-secret加密字符串
 # 强制固定必须参数 - host
 configmap:
@@ -24,7 +24,7 @@ configmap:
 metrics:
   # 第一个监控指标组 cpu
   # 注意：内置监控指标有 (responseTime - 响应时间)
-  - name: baisc
+  - name: basic
     # 指标组调度优先级(0-127)越小优先级越高,优先级低的指标组会等优先级高的指标组采集完成后才会被调度,相同优先级的指标组会并行调度采集
     # 优先级为0的指标组为可用性指标组,即它会被首先调度,采集成功才会继续调度其它指标组,采集失败则中断调度
     priority: 0
@@ -33,9 +33,9 @@ metrics:
       # 指标信息 包括 field名称   type字段类型:0-number数字,1-string字符串   instance是否为实例主键   unit:指标单位
       - field: flink-version
         type: 1
-# 监控采集使用协议 eg: sql, ssh, http, telnet, wmi, snmp, sdk
+    # 监控采集使用协议 eg: sql, ssh, http, telnet, wmi, snmp, sdk
     protocol: http
-# 当protocol为http协议时具体的采集配置
+    # 当protocol为http协议时具体的采集配置
     http:
       # 主机host: ipv4 ipv6 域名
       host: ^_^host^_^
@@ -61,15 +61,15 @@ metrics:
   - name: overview
     priority: 1
     fields:
-      - field: slots-total        # slots总数
+      - field: slots_total        # slots总数
         type: 0
-      - field: slots-used        # slots已经使用的数量
+      - field: slots_used        # slots已经使用的数量
         type: 0
-      - field: task-total        # 任务总数
+      - field: task_total        # 任务总数
         type: 0
-      - field: jobs-running        # 正在运行的任务数
+      - field: jobs_running        # 正在运行的任务数
         type: 0
-      - field: jobs-failed        # 已经失败的任务数
+      - field: jobs_failed        # 已经失败的任务数
         type: 0
     aliasFields:
       - slots-total
@@ -79,11 +79,11 @@ metrics:
       - jobs-cancelled
       - jobs-failed
     calculates:
-      - slots-total=#`slots-total`
-      - slots-used=#`slots-total`-#`slots-available`
-      - task-total=#`jobs-running`+#`jobs-finished`+#`jobs-cancelled`+#`jobs-failed`
-      - jobs-running=#`jobs-running`
-      - jobs-failed=#`jobs-failed`
+      - slots_total=#`slots-total`
+      - slots_used=#`slots-total`-#`slots-available`
+      - task_total=#`jobs-running`+#`jobs-finished`+#`jobs-cancelled`+#`jobs-failed`
+      - jobs_running=#`jobs-running`
+      - jobs_failed=#`jobs-failed`
     protocol: http
     http:
       # 主机host: ipv4 ipv6 域名
@@ -106,3 +106,4 @@ metrics:
         digestAuthPassword: ^_^password^_^
       # 响应数据解析方式: default-系统规则,jsonPath-jsonPath脚本,website-api可用性指标监控
       parseType: default
+      

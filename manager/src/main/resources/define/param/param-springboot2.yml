@@ -50,3 +50,4 @@ param:
     type: text
     defaultValue: /actuator
     required: true
+    hide: true
